@@ -7,7 +7,7 @@
 ## Project Structure
 
 shop/
-├── client/        # React + Vite frontend application
+├── admin-client/        # React + Vite frontend application
 ├── server/        # .NET Core Web API backend
 ├── docs/          # Documentation, specs, etc.
 └── db/            # Database schema and migration scripts
@@ -39,6 +39,6 @@ shop/
 #### Frontend
 
 ```bash
-cd client
+cd admin-client
 npm install
 npm run dev

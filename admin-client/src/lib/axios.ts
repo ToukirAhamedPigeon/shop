@@ -1,4 +1,4 @@
-// client/src/lib/axios.ts
+// admin-client/src/lib/axios.ts
 import axios from 'axios'
 
 const api = axios.create({
