@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import api from './lib/axios'
+import { Card, CardContent } from '@/components/ui/card'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [message, setMessage] = useState<string>('')
+  const appName = import.meta.env.VITE_APP_NAME || 'App'
+
+  useEffect(() => {
+    const fetchMessage = async () => {
+      try {
+        const res = await api.get('/welcome') // http://localhost:5000/api/welcome
+        setMessage(res.data)
+      } catch (err) {
+        console.error('Error fetching welcome message:', err)
+      }
+    }
+
+    fetchMessage()
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="flex items-center justify-center min-h-screen min-w-screen bg-gray-100 p-4">
+      <Card className="max-w-md w-full text-center shadow-xl">
+        <CardContent className="p-6 flex flex-col items-center">
+          <img
+            src={import.meta.env.VITE_APP_LOGO_URL}
+            alt="Logo"
+            width={120}
+            height="auto"
+            loading="lazy"
+          />
+          <h1 className="text-[12px] font-bold text-gray-800 mb-2">Welcome to {appName}!</h1>
+          <p className="text-gray-600">{message}</p>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
