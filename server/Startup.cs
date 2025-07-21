@@ -41,8 +41,6 @@ namespace server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                // ❌ Do NOT redirect to HTTPS in development
-                // app.UseHttpsRedirection(); ← comment this out
             }
             else
             {
