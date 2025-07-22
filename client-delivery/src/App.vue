@@ -1,47 +1,36 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import api from './lib/axios'
+import { Card, CardContent } from './components/ui/card'
+
+const message = ref('')
+const appName = import.meta.env.VITE_APP_NAME || 'App'
+const logo = import.meta.env.VITE_APP_LOGO_URL
+
+onMounted(async () => {
+  try {
+    const res = await api.get('/welcome')
+    message.value = res.data
+  } catch (err) {
+    console.error('Error fetching welcome message:', err)
+  }
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="flex items-center justify-center min-h-screen min-w-screen bg-gray-100">
+    <Card class="max-w-md w-full text-center shadow-xl">
+      <CardContent class="p-6 flex flex-col items-center">
+        <img
+          :src="logo"
+          alt="Logo"
+          width="120"
+          height="auto"
+          loading="lazy"
+        />
+        <h1 class="text-[20px] font-bold text-gray-800 mb-2">Welcome to {{ appName }}!</h1>
+        <p class="text-gray-600">{{ message }}</p>
+      </CardContent>
+    </Card>
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
