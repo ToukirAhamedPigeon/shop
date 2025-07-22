@@ -7,9 +7,9 @@ namespace server.Controllers
     public class WelcomeController : ControllerBase
     {
         [HttpGet]
-        public IActionResult GetWelcome()
+        public IActionResult GetWelcomeMessage()
         {
-            return Ok("Smarter shopping with real-time intelligence!");
+            return Ok("Welcome to Smart Shop Management!");
         }
     }
 }
