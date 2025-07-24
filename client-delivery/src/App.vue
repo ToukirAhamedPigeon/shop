@@ -18,7 +18,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen min-w-screen bg-gray-100">
+  <div class="flex items-center justify-center min-h-screen min-w-screen  bg-gray-100">
     <Card class="max-w-md w-full text-center shadow-xl">
       <CardContent class="p-6 flex flex-col items-center">
         <img
