@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 
 interface Product {
@@ -22,6 +23,10 @@ function App() {
   const [message, setMessage] = useState<string>('')
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [Name, setName] = useState<string>('')
+  const [minPrice, setMinPrice] = useState<string>('')
+  const [maxPrice, setMaxPrice] = useState<string>('')
+
   const appName = process.env.VITE_APP_NAME || 'App'
 
   useEffect(() => {
@@ -37,21 +42,30 @@ function App() {
     fetchMessage()
   }, [])
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true)
-      try {
-        const res = await api.post('/products/get-all')
-        setProducts(res.data || [])
-      } catch (err) {
-        console.error('Error fetching products:', err)
-      } finally {
-        setLoading(false)
-      }
+  const fetchProducts = async (filters = {}) => {
+    setLoading(true)
+    try {
+      const res = await api.post('/products/get-all', filters)
+      setProducts(res.data || [])
+    } catch (err) {
+      console.error('Error fetching products:', err)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchProducts()
   }, [])
+
+  // debounce could be added for optimization
+  const handleFilterChange = () => {
+    fetchProducts({
+      Name,
+      minPrice: minPrice || undefined,
+      maxPrice: maxPrice || undefined,
+    })
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen min-w-screen bg-gray-100 p-4">
@@ -69,6 +83,32 @@ function App() {
             <p className="text-gray-600">{message}</p>
           </div>
 
+          {/* Filters Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <Input
+              type="text"
+              placeholder="Search Name"
+              value={Name}
+              onChange={(e) => setName(e.target.value)}
+              onKeyUp={handleFilterChange}
+            />
+            <Input
+              type="number"
+              placeholder="Min Price"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              onKeyUp={handleFilterChange}
+            />
+            <Input
+              type="number"
+              placeholder="Max Price"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              onKeyUp={handleFilterChange}
+            />
+          </div>
+
+          {/* Table */}
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -88,7 +128,7 @@ function App() {
                   </TableRow>
                 ) : (
                   products.map((product, index) => (
-                    <TableRow key={product.Id}>
+                    <TableRow key={`${product.Id}-${index}`}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{product.Name}</TableCell>
                       <TableCell>${parseFloat(product.Price).toFixed(2)}</TableCell>
