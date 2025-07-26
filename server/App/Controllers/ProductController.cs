@@ -6,8 +6,8 @@ using server.App.Services;
 namespace server.App.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController(IProductService _productService) : ControllerBase
+    [Route("api/products")]
+    public class ProductController(IProductService _productService) : ControllerBase
     {
         // POST: /api/products/get-all
         [HttpPost("get-all")]

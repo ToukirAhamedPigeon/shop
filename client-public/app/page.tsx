@@ -14,16 +14,16 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 
 interface Product {
-  Id: string
-  Name: string
-  Price: string
+  id: string
+  name: string
+  price: string
 }
 
 function App() {
   const [message, setMessage] = useState<string>('')
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-  const [Name, setName] = useState<string>('')
+  const [name, setName] = useState<string>('')
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
 
@@ -61,7 +61,7 @@ function App() {
   // debounce could be added for optimization
   const handleFilterChange = () => {
     fetchProducts({
-      Name,
+      name,
       minPrice: minPrice || undefined,
       maxPrice: maxPrice || undefined,
     })
@@ -88,7 +88,7 @@ function App() {
             <Input
               type="text"
               placeholder="Search Name"
-              value={Name}
+              value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyUp={handleFilterChange}
             />
@@ -128,10 +128,10 @@ function App() {
                   </TableRow>
                 ) : (
                   products.map((product, index) => (
-                    <TableRow key={`${product.Id}-${index}`}>
+                    <TableRow key={`${product.id}-${index}`}>
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell>{product.Name}</TableCell>
-                      <TableCell>${parseFloat(product.Price).toFixed(2)}</TableCell>
+                      <TableCell>{product.name}</TableCell>
+                      <TableCell>${parseFloat(product.price).toFixed(2)}</TableCell>
                     </TableRow>
                   ))
                 )}
