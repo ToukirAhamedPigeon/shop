@@ -29,6 +29,7 @@ function App() {
 
   const appName = process.env.VITE_APP_NAME || 'App'
 
+  // Fetch welcome message on load
   useEffect(() => {
     const fetchMessage = async () => {
       try {
@@ -42,6 +43,7 @@ function App() {
     fetchMessage()
   }, [])
 
+  // Fetch products (initial + when filters change)
   const fetchProducts = async (filters = {}) => {
     setLoading(true)
     try {
@@ -54,23 +56,29 @@ function App() {
     }
   }
 
+  // Initial fetch
   useEffect(() => {
     fetchProducts()
   }, [])
 
-  // debounce could be added for optimization
-  const handleFilterChange = () => {
-    fetchProducts({
-      name,
-      minPrice: minPrice || undefined,
-      maxPrice: maxPrice || undefined,
-    })
-  }
+  // Debounced filtering
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      fetchProducts({
+        name,
+        minPrice: minPrice || undefined,
+        maxPrice: maxPrice || undefined,
+      })
+    }, 500)
+
+    return () => clearTimeout(debounce)
+  }, [name, minPrice, maxPrice])
 
   return (
-    <div className="flex items-center justify-center min-h-screen min-w-screen bg-gray-100 p-4">
-      <Card className="w-full max-w-6xl shadow-xl">
-        <CardContent className="p-6">
+    <div className="flex items-center justify-center h-screen w-screen bg-gray-100 p-4 overflow-hidden">
+      <Card className="w-full h-full max-w-6xl max-h-[95vh] shadow-xl overflow-hidden">
+        <CardContent className="p-6 flex flex-col h-full">
+          {/* Header */}
           <div className="flex flex-col items-center mb-6">
             <img
               src={process.env.NEXT_PUBLIC_APP_LOGO_URL}
@@ -80,36 +88,33 @@ function App() {
               loading="lazy"
             />
             <h1 className="text-[20px] font-bold text-gray-800 mb-2">Welcome to {appName}!</h1>
-            <p className="text-gray-600">{message}</p>
+            <p className="text-gray-600 text-center">{message}</p>
           </div>
 
-          {/* Filters Row */}
+          {/* Filters */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
             <Input
               type="text"
               placeholder="Search Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              onKeyUp={handleFilterChange}
             />
             <Input
               type="number"
               placeholder="Min Price"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              onKeyUp={handleFilterChange}
             />
             <Input
               type="number"
               placeholder="Max Price"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              onKeyUp={handleFilterChange}
             />
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
+          {/* Scrollable Table Section */}
+          <div className="overflow-auto rounded border border-gray-200 flex-grow">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -126,7 +131,13 @@ function App() {
                       Loading products...
                     </TableCell>
                   </TableRow>
-                ) : (
+                ) :products.length===0?(
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center py-6">
+                      No product found
+                    </TableCell>
+                  </TableRow>
+                ): (
                   products.map((product, index) => (
                     <TableRow key={`${product.id}-${index}`}>
                       <TableCell>{index + 1}</TableCell>
