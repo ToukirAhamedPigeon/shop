@@ -14,6 +14,7 @@ interface Product {
   selector: 'app-welcome',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrls: ['./welcome.component.css'],
   templateUrl: './welcome.component.html',
 })
 export class WelcomeComponent implements OnInit {
