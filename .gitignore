@@ -1,5 +1,5 @@
 #.gitignore
-
+**/.env*
 /admin-client/node_modules
 /admin-client/dist
 /server/bin
