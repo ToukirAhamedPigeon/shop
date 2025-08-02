@@ -9,6 +9,11 @@ Env.Load(".env.local"); // 🔐 Load secrets like DB connection string from .env
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000);
+});
+
 // 💡 Inject the DB connection string from the environment into the config system
 builder.Configuration["ConnectionStrings:DefaultConnection"] = Env.GetString("DefaultConnection");
 
