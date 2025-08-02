@@ -9,7 +9,7 @@ namespace server.App.Controllers
         [HttpGet]
         public IActionResult GetWelcomeMessage()
         {
-            return Ok("Welcome to Smart Shop Management!");
+            return Ok("Welcome to Smart Shop Management in aws server!");
         }
     }
 }
